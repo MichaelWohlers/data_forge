@@ -40,7 +40,7 @@ class Machine(MachineInterface):
         now = datetime.datetime.now()
         timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
         self.machine_data["timestamp"] = timestamp
-        
+
         # Combine machine_attributes dict and machine_data dict
         generated_data = self.machine_attributes.copy()
         generated_data.update(self.machine_data)
@@ -62,7 +62,7 @@ class JetPrinter(Machine):
 
     def generate_data(self):
         base_data = super().generate_data()
-        #base_data.update(self.machine_data)
+        base_data.update(self.machine_data)
         generated_data = base_data
 
         return generated_data 
