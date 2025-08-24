@@ -25,15 +25,20 @@ class Machine(MachineInterface):
         "error": "error"
     }
     machine_types = {
-        "jet_printer": "jet_printer"
+        "jet_printer": "jet_printer",
+        "conveyor": "conveyor"
     }
 
-    machine_attributes = {"machine_id": "", "machine_type": ""}
-    machine_data = {"timestamp": "", "status": ""}
+    def __init__(self, machine_type: str):
+        self.machine_attributes = {"machine_id": "", "machine_type": ""}
+        self.machine_data = {"timestamp": "", "status": ""}
 
-    def __init__(self, machine_id: str, machine_type: str):
-        self.machine_attributes["machine_id"] = machine_id
+        if machine_type == "jet_printer":
+            self.machine_attributes["machine_id"] = "A1"
+        elif machine_type == "conveyor":
+            self.machine_attributes["machine_id"] = "C1"
         self.machine_attributes["machine_type"] = machine_type
+        
         
     def generate_data(self):
         # Create timestamp
@@ -49,42 +54,67 @@ class Machine(MachineInterface):
     
     def set_status(self, status):
         if status in self.status_modes:
-            self.status = status
+            self.machine_data["status"] = status
         else:
             print(f"Status mode doesn't exist, choose avaiable mode {self.status_modes}")
 
     def get_status(self):
         return self.status
 
+# Factory class creates subclasses
+class MachineFactory:
+    def create_machine(type: str):
+        if type in Machine.machine_types:
+            if type == "jet_printer":
+                print(f"Machine created: {type}")
+                return JetPrinter(type)
+            elif type == "conveyor":
+                print(f"Machine created: {type}")
+                return Conveyor(type)
+            else:
+                print("Machine not implemented")         
+        else:
+            return f"Machine type not found \n Available Types: {Machine.machine_types}"
+        
 # Sub-class modifies base class
 class JetPrinter(Machine):
     machine_data = {"temperature": ""}
 
     def generate_data(self):
         base_data = super().generate_data()
-        base_data.update(self.machine_data)
-        generated_data = base_data
+        final_data = base_data.copy()
+        final_data.update(self.machine_data)
 
-        return generated_data 
+        return final_data
 
     def set_temperature(self, temp):
         self.machine_data["temperature"] = temp
-
-# Factory class creates subclasses
-class MachineFactory:
-    def create_machine(type: str):
-        if type in Machine.machine_types:
-            if type == "jet_printer":
-                return JetPrinter("A1", Machine.machine_types[type])
-        else:
-            return f"Machine type not found \n Available Types: {Machine.machine_types}"
         
+# Sub-class modifies base class
+class Conveyor(Machine):
+    machine_data = {"speed": ""}
+
+    def generate_data(self):
+        base_data = super().generate_data()
+        final_data = base_data.copy()
+        final_data.update(self.machine_data)
+
+        return final_data
+
+    def set_speed(self, speed):
+        self.machine_data["speed"] = speed
+
 if __name__ == "__main__":
     # Test machine factory logic
     machine1 = MachineFactory.create_machine("jet_printer")
     machine1.set_status("idle")
     machine1.set_temperature("105")
 
+    machine2 = MachineFactory.create_machine("conveyor")
+    machine2.set_status("active")
+    machine2.set_speed("5")
+
     print(machine1.generate_data())
+    print(machine2.generate_data())
 
 
