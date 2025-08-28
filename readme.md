@@ -2,11 +2,13 @@
 
 A factory simulation system that generates machine data in a factory environment using design patterns.
 
+- **ToDo**
+  - Generate unique machine_id 
+
 ## Overview
 
 Data Forge provides a comprehensive factory simulation framework with the following key features:
-- **ToDo**
-  - Generate unique machine_id 
+
 - **Machine Data Generation**: Creates customizable machine objects using a factory pattern
   - Simulates real-time machine data
   - Supports dynamic expansion to add new machine types without altering existing code
